@@ -33,7 +33,7 @@ while True:
         #Instantiate Driver
         options = Options()
         options.add_argument("--headless")
-        firefox_binary_path = "/usr/bin/firefox"
+        firefox_binary_path = "/snap/bin/geckodriver"
         service = Service(executable_path=firefox_binary_path)
         driver = webdriver.Firefox(service=service, options=options)
         #driver = webdriver.Firefox(options=options)

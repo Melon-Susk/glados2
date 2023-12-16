@@ -24,7 +24,7 @@ while go:
         driver.get("https://www.lordsandknights.com")
 
         #Login and load World
-        login = General.loginAndWorldSelect(driver, EMAILS[i], PASSWORD)
+        login = General.loginAndWorldSelect(driver, EMAILS[i], PASSWORD, loginWaitTime=10)
         nextAccount = input("Continue?")
 
         if nextAccount == "":

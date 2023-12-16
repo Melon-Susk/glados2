@@ -15,13 +15,14 @@ from datetime import datetime
 #Global Variables
 EMAILS = []
 PASSWORD = input("Passwort:")
-emailAmount = input("Accountanzahl:")
+EMAILAMOUNT = input("Accountanzahl:")
+LOGINTIME = input("Login Wartezeit:")
 CASTLENAMES = Util.loadJsonToDict('castlenames.json')
 
 #Init Stuff
 castlesSilver = {}
 
-for i in range(1, int(emailAmount) + 1):
+for i in range(1, int(EMAILAMOUNT) + 1):
     EMAILS.append(f"unvish112+glados{i}@gmail.com")
 print(EMAILS)
 
@@ -42,7 +43,7 @@ while True:
 
         #Login and load World
         try:
-            login = General.loginAndWorldSelect(driver, EMAILS[i], PASSWORD)
+            login = General.loginAndWorldSelect(driver, EMAILS[i], PASSWORD, LOGINTIME)
             #Kill Pop-Ups
             General.popupKiller(driver)
         except:

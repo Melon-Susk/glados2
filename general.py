@@ -11,10 +11,10 @@ class General:
         pass
 
     @staticmethod
-    def loginAndWorldSelect(driver, email, password):
+    def loginAndWorldSelect(driver, email, password, loginWaitTime):
         #wait until Email Form is loaded
         WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "/html/body/div[2]/div/div[2]/div[2]/div[1]/div[3]/form/div[1]/div[1]/input")))
-        time.sleep(1)
+        time.sleep(3)
 
         #get Elements
         loginEmail = driver.find_element(By.XPATH, "/html/body/div[2]/div/div[2]/div[2]/div[1]/div[3]/form/div[1]/div[1]/input")
@@ -28,12 +28,12 @@ class General:
 
         #Wait for World Selection Screen loading
         WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.XPATH, '//*[text()="Wähle eine Welt"]')))
-        time.sleep(1)
+        time.sleep(3)
         #Click on latest played World
         driver.find_element(By.XPATH, "/html/body/div[2]/div/div[2]/div[2]/div[1]").click()
         #Wait for World to load
         WebDriverWait(driver, 120).until(EC.presence_of_element_located((By.XPATH, '//*[text()="Profil"]')))
-        time.sleep(10)
+        time.sleep(int(loginWaitTime))
 
         #Validate Successfull World Loading
         profileMenu = driver.find_element(By.XPATH, '//*[text()="Profil"]')

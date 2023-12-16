@@ -38,7 +38,7 @@ class Util:
     @staticmethod
     def loadJsonToDict(dateipfad):
         try:
-            with open(dateipfad, 'r') as datei:
+            with open(dateipfad, 'r', encoding='utf-8') as datei:
                 daten = json.load(datei)
                 return daten
         except FileNotFoundError:
@@ -50,7 +50,7 @@ class Util:
     
     @staticmethod
     def appendToOverviewJson(dateipfad, accountName, castleName, resourceDict):
-        with open(dateipfad, 'r') as file:
+        with open(dateipfad, 'r', encoding='utf-8') as file:
             file_content = file.read()
             if not file_content:
                 daten = {}
@@ -62,5 +62,5 @@ class Util:
 
         daten[accountName][castleName] = resourceDict
 
-        with open(dateipfad, 'w') as file:
+        with open(dateipfad, 'w', encoding='utf-8') as file:
             json.dump(daten, file)

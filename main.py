@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.firefox.service import Service
 from general import General
 from construction import Construction
 from recruitment import Recruitment
@@ -32,7 +33,10 @@ while True:
         #Instantiate Driver
         options = Options()
         options.add_argument("--headless")
-        driver = webdriver.Firefox(options=options)
+        firefox_binary_path = "/usr/bin/firefox"
+        service = Service(executable_path=firefox_binary_path)
+        driver = webdriver.Firefox(service=service, options=options)
+        #driver = webdriver.Firefox(options=options)
         driver.set_window_size(1920, 1080)
         driver.get("https://www.lordsandknights.com")
 

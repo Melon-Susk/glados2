@@ -47,3 +47,20 @@ class Util:
         except json.JSONDecodeError:
             print("Fehler beim Parsen der JSON-Datei:", dateipfad)
             return None
+    
+    @staticmethod
+    def appendToOverviewJson(dateipfad, accountName, castleName, resourceDict):
+        with open(dateipfad, 'r') as file:
+            file_content = file.read()
+            if not file_content:
+                daten = {}
+            else:
+                daten = json.loads(file_content)
+        
+        if accountName not in daten:
+            daten[accountName] = {}
+
+        daten[accountName][castleName] = resourceDict
+
+        with open(dateipfad, 'w') as file:
+            json.dump(daten, file)

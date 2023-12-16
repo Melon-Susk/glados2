@@ -37,9 +37,15 @@ while True:
         driver.get("https://www.lordsandknights.com")
 
         #Login and load World
-        login = General.loginAndWorldSelect(driver, EMAILS[i], PASSWORD)
-        #Kill Pop-Ups
-        General.popupKiller(driver)
+        try:
+            login = General.loginAndWorldSelect(driver, EMAILS[i], PASSWORD)
+            #Kill Pop-Ups
+            General.popupKiller(driver)
+        except:
+            print("Fehler beim Login!\n")
+            driver.quit()
+            time.sleep(3)
+            continue
         #Select Main Castle for loop start
         General.selectMainCastle(driver, CASTLENAMES[EMAILS[i]])
         loopStart = False
@@ -68,22 +74,31 @@ while True:
                 castlesSilver[name] = datetime.now()
                 silv = castlesSilver[name]
             newDay = Util.checkNewDay(silv)
-            if newDay and (points > 60):
-                General.openBuildingMenu(driver)
-                eligibleSilver = Silver.openKeepMenu(driver)
-                if eligibleSilver:
-                    castlesSilver[name] = Silver.buySilver(driver)
-                Util.reset(driver)
+            try:
+                if newDay and (points > 60):
+                    General.openBuildingMenu(driver)
+                    eligibleSilver = Silver.openKeepMenu(driver)
+                    if eligibleSilver:
+                        castlesSilver[name] = Silver.buySilver(driver)
+                    Util.reset(driver)
+            except Exception as e:
+                print("Fehler bei der Silberbeschaffung!\n")
+                print(e)
 
 
             #Building Construction
-            General.openBuildingMenu(driver)
-            activeConstruction = Construction.checkForActiveConstruction(driver)
-            if not activeConstruction:
-                buildingLevels = Construction.getBuildingLevels(driver)
-                buildOrderArray = Construction.createBuildOrder(buildingLevels, resourceDict)
-                Construction.startConstruction(driver, buildOrderArray)
-            Util.reset(driver)
+            try:
+                General.openBuildingMenu(driver)
+                activeConstruction = Construction.checkForActiveConstruction(driver)
+                if not activeConstruction:
+                    buildingLevels = Construction.getBuildingLevels(driver)
+                    buildOrderArray = Construction.createBuildOrder(buildingLevels, resourceDict)
+                    Construction.startConstruction(driver, buildOrderArray)
+                Util.reset(driver)
+            except Exception as e:
+                print("Fehler beim Gebäudeausbau!\n")
+                print(e)
+
 
 
             #Science
@@ -104,6 +119,9 @@ while True:
                     recruitmentPlan = Recruitment.determineRecruitmentPlan(points, amount)
                 Util.reset(driver)
 
+            #Get New Resource Amount and write to File
+            resourceDict = General.getResourceAmount(driver)
+            Util.appendToOverviewJson('resourceOverview.json', EMAILS[i], name, resourceDict)
 
             #Switch to next Castle
             time.sleep(1)

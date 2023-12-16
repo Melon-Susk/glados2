@@ -1,6 +1,7 @@
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
+from general import General
 import time
 import re
 
@@ -19,7 +20,15 @@ class Construction:
 
     
     @staticmethod
-    def getBuildingLevels(driver, buildingNamesArray):
+    def getBuildingLevels(driver):
+        #Determine Eligible Buildings
+        name, points = General.getCastleNameAndPoints(driver)
+        if points < 100:
+            buildingNamesArray = ["Bauernhof", "Holzfäller", "Holzlager", "Steinbruch", "Steinlager", "Erzmine", "Erzlager"]
+        else:
+            buildingNamesArray = ["Bergfried", "Zeughaus", "Taverne", "Bibliothek", "Wehranlagen", "Markt", 
+                  "Bauernhof", "Holzfäller", "Holzlager", "Steinbruch", "Steinlager", "Erzmine", "Erzlager"]
+
         buildingLevelsDict = {}
         #Limit Scope to Building Menu
         buildingContainer = driver.find_element(By.XPATH, '//*[text()="Hauptgebäude"]').find_element(By.XPATH, "ancestor::node()[2]")
@@ -38,7 +47,7 @@ class Construction:
         levelDict["Holzfäller"] = levelDict["Holzfäller"] - 15
         levelDict["Steinbruch"] = levelDict["Steinbruch"] - 15
         levelDict["Erzmine"] = levelDict["Erzmine"] - 10
-        if resourceAmountDict["Untertanen"] < 20:
+        if resourceAmountDict["Untertanen"] < 10:
             levelDict["Bauernhof"] = levelDict["Bauernhof"] - 100
         elif resourceAmountDict["Untertanen"] < 100:
             levelDict["Bauernhof"] = levelDict["Bauernhof"] - 10

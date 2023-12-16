@@ -51,7 +51,7 @@ class Recruitment:
             desiredAmount = [100,50,20,30,30,0]
         elif castleLevel < 240:
             desiredAmount = [300,300,100,50,50,20]
-        else:
+        elif castleLevel < 300:
             desiredAmount = [600,600,600,325,425,425]
 
         for i in range(len(units)):

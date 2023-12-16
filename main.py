@@ -1,22 +1,28 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
+from selenium.webdriver.firefox.options import Options
 from general import General
 from construction import Construction
 from recruitment import Recruitment
+from science import Science
 from silver import Silver
 from util import Util
 import time
 from datetime import datetime
 
-EMAILS = ["unvish112+glados@gmail.com", "unvish112+glados1@gmail.com"]
-PASSWORD = "samesame"
+#Global Variables
+EMAILS = []
+PASSWORD = input("Passwort:")
+emailAmount = input("Accountanzahl:")
 CASTLENAMES = Util.loadJsonToDict('castlenames.json')
-BUILDING_NAMES = ["Bergfried", "Zeughaus", "Taverne", "Bibliothek", "Wehranlagen", "Markt", 
-                  "Bauernhof", "Holzfäller", "Holzlager", "Steinbruch", "Steinlager", "Erzmine", "Erzlager"]
 
 #Init Stuff
 castlesSilver = {}
+
+for i in range(1, int(emailAmount) + 1):
+    EMAILS.append(f"unvish112+glados{i}@gmail.com")
+print(EMAILS)
 
 
 #ACCOUNT LOOP
@@ -24,12 +30,16 @@ while True:
     i = 0
     for i in range(len(EMAILS)):
         #Instantiate Driver
-        driver = webdriver.Firefox()
+        options = Options()
+        options.add_argument("--headless")
+        driver = webdriver.Firefox(options=options)
         driver.set_window_size(1920, 1080)
         driver.get("https://www.lordsandknights.com")
 
         #Login and load World
         login = General.loginAndWorldSelect(driver, EMAILS[i], PASSWORD)
+        #Kill Pop-Ups
+        General.popupKiller(driver)
         #Select Main Castle for loop start
         General.selectMainCastle(driver, CASTLENAMES[EMAILS[i]])
         loopStart = False
@@ -58,7 +68,7 @@ while True:
                 castlesSilver[name] = datetime.now()
                 silv = castlesSilver[name]
             newDay = Util.checkNewDay(silv)
-            if newDay:
+            if newDay and (points > 60):
                 General.openBuildingMenu(driver)
                 eligibleSilver = Silver.openKeepMenu(driver)
                 if eligibleSilver:
@@ -70,19 +80,29 @@ while True:
             General.openBuildingMenu(driver)
             activeConstruction = Construction.checkForActiveConstruction(driver)
             if not activeConstruction:
-                buildingLevels = Construction.getBuildingLevels(driver, BUILDING_NAMES)
+                buildingLevels = Construction.getBuildingLevels(driver)
                 buildOrderArray = Construction.createBuildOrder(buildingLevels, resourceDict)
                 Construction.startConstruction(driver, buildOrderArray)
             Util.reset(driver)
 
 
+            #Science
+            if points > 60:
+                General.openBuildingMenu(driver)
+                researchAvailable = Science.openLibraryMenu(driver)
+                if researchAvailable:
+                    Science.startResearch(driver)
+                Util.reset(driver)
+
+
             #Recruitment
-            General.openBuildingMenu(driver)
-            eligibleRecruitment = Recruitment.openBarracksMenu(driver)
-            if eligibleRecruitment:
-                amount = Recruitment.getCurrentUnitAmount(driver)
-                recruitmentPlan = Recruitment.determineRecruitmentPlan(points, amount)
-            Util.reset(driver)
+            if points > 80:
+                General.openBuildingMenu(driver)
+                eligibleRecruitment = Recruitment.openBarracksMenu(driver)
+                if eligibleRecruitment:
+                    amount = Recruitment.getCurrentUnitAmount(driver)
+                    recruitmentPlan = Recruitment.determineRecruitmentPlan(points, amount)
+                Util.reset(driver)
 
 
             #Switch to next Castle
@@ -95,8 +115,9 @@ while True:
         driver.quit()
         time.sleep(3)
     
-    break
-    #time.sleep(60)
+    print("Zyklus abgeschlossen. Nächster Zyklus in 60 Sekunden")
+    print("-----------------------------------------------------\n")
+    time.sleep(60)
 
 
 

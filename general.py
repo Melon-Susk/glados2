@@ -86,5 +86,16 @@ class General:
             body = driver.find_element(By.TAG_NAME, 'body')
             body.send_keys(Keys.ARROW_RIGHT)
             time.sleep(1)
+    
+    @staticmethod
+    def popupKiller(driver):
+        for i in range(10):
+            try:
+                WebDriverWait(driver, 3).until(EC.presence_of_element_located((By.CSS_SELECTOR, '.event-pop-up-button.ButtonRedAccept')))
+                driver.find_element(By.CSS_SELECTOR, '.event-pop-up-button.ButtonRedAccept').click()
+                print("Pop-Up gefunden und beseitigt!")
+                time.sleep(3)
+            except:
+                break
         
 

@@ -46,8 +46,9 @@ while True:
             login = General.loginAndWorldSelect(driver, EMAILS[i], PASSWORD, LOGINTIME)
             #Kill Pop-Ups
             General.popupKiller(driver)
-        except:
+        except Exception as e:
             print("Fehler beim Login!\n")
+            print(e)
             driver.quit()
             time.sleep(3)
             continue

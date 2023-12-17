@@ -17,6 +17,7 @@ EMAILS = []
 PASSWORD = input("Passwort:")
 EMAILAMOUNT = input("Accountanzahl:")
 LOGINTIME = input("Login Wartezeit:")
+GENERALWAITTIME = input("Allgemeine Wartezeit:")
 CASTLENAMES = Util.loadJsonToDict('castlenames.json')
 
 #Init Stuff
@@ -44,7 +45,7 @@ while True:
 
         #Login and load World
         try:
-            login = General.loginAndWorldSelect(driver, EMAILS[i], PASSWORD, LOGINTIME)
+            login = General.loginAndWorldSelect(driver, EMAILS[i], PASSWORD, LOGINTIME, GENERALWAITTIME)
             #Kill Pop-Ups
             General.popupKiller(driver)
         except Exception as e:

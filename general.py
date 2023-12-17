@@ -25,17 +25,13 @@ class General:
 
         #get Elements
         loginEmail = driver.find_element(By.XPATH, "/html/body/div[2]/div/div[2]/div[2]/div[1]/div[3]/form/div[1]/div[1]/input")
-        print("Email Element gefunden...")
         loginPassword = driver.find_element(By.XPATH, "/html/body/div[2]/div/div[2]/div[2]/div[1]/div[3]/form/div[1]/div[2]/input")
-        print("Passwort Element gefunden...")
         loginButton = driver.find_element(By.XPATH, "/html/body/div[2]/div/div[2]/div[2]/div[1]/div[3]/form/div[3]/button")
-        print("Button Element gefunden...")
 
         #send and submit login Data
         loginEmail.send_keys(email)
         loginPassword.send_keys(password)
         loginButton.click()
-        print("Button geklickt...")
 
         #Wait for World Selection Screen loading
         WebDriverWait(driver, 60).until(EC.presence_of_element_located((By.XPATH, '//*[text()="Wähle eine Welt"]')))
@@ -43,10 +39,8 @@ class General:
         time.sleep(float(generalWaitTime))
         #Click on latest played World
         driver.find_element(By.XPATH, '//*[text()="Deutsch 26 (empfohlen)"]').click()
-        print("Auf Welt geklickt...")
         #Wait for World to load
         WebDriverWait(driver, 120).until(EC.presence_of_element_located((By.XPATH, '//*[text()="Profil"]')))
-        print("Profilelement gefunden...")
         time.sleep(int(loginWaitTime))
 
         #Validate Successfull World Loading
@@ -54,6 +48,7 @@ class General:
         profileMenu.click()
         WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//*[text()="Spielerübersicht"]')))
         profileMenu.click()
+        print("Welt erfolgreich geladen")
         time.sleep(1)
 
         return True

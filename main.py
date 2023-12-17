@@ -122,7 +122,7 @@ while True:
                     print(e)
 
 
-
+            """
             #Recruitment
             if points > 80:
                 General.openBuildingMenu(driver)
@@ -131,18 +131,25 @@ while True:
                     amount = Recruitment.getCurrentUnitAmount(driver)
                     recruitmentPlan = Recruitment.determineRecruitmentPlan(points, amount)
                 Util.reset(driver)
+            """
 
             #Get New Resource Amount and write to File
             resourceDict = General.getResourceAmount(driver)
             Util.appendToOverviewJson('resourceOverview.json', EMAILS[i], name, resourceDict)
 
             #Switch to next Castle
-            time.sleep(1)
-            body = driver.find_element(By.TAG_NAME, 'body')
-            body.send_keys(Keys.ARROW_RIGHT)
-            print("")
-            time.sleep(3)
-            Util.reset(driver)
+            try:
+                time.sleep(1)
+                body = driver.find_element(By.TAG_NAME, 'body')
+                body.send_keys(Keys.ARROW_RIGHT)
+                print("")
+                time.sleep(3)
+                Util.reset(driver)
+            except Exception as e:
+                print("Fehler beim Burgenwechsel! Der Account wird übersprungen!\n")
+                print(e)
+                break
+
 
         driver.quit()
         time.sleep(3)

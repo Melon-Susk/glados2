@@ -16,6 +16,13 @@ class General:
         WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "/html/body/div[2]/div/div[2]/div[2]/div[1]/div[3]/form/div[1]/div[1]/input")))
         time.sleep(float(generalWaitTime))
 
+        #Change language
+        WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "/html/body/div[2]/div/div[2]/div[2]/div[1]/div[2]/div[1]/div/div[1]/div")))
+        driver.find_element(By.XPATH, "/html/body/div[2]/div/div[2]/div[2]/div[1]/div[2]/div[1]/div/div[1]/div").click()
+        WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.XPATH, '//*[text()="DE"]')))
+        driver.find_element(By.XPATH, '//*[text()="DE"]').click()
+        time.sleep(float(generalWaitTime))
+
         #get Elements
         loginEmail = driver.find_element(By.XPATH, "/html/body/div[2]/div/div[2]/div[2]/div[1]/div[3]/form/div[1]/div[1]/input")
         print("Email Element gefunden...")
@@ -31,7 +38,7 @@ class General:
         print("Button geklickt...")
 
         #Wait for World Selection Screen loading
-        WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.XPATH, '//*[text()="Wähle eine Welt"]')))
+        WebDriverWait(driver, 60).until(EC.presence_of_element_located((By.XPATH, '//*[text()="Wähle eine Welt"]')))
         print("Weltauswahl geladen...")
         time.sleep(float(generalWaitTime))
         #Click on latest played World

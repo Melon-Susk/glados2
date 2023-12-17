@@ -111,11 +111,16 @@ while True:
 
             #Science
             if points > 60:
-                General.openBuildingMenu(driver)
-                researchAvailable = Science.openLibraryMenu(driver)
-                if researchAvailable:
-                    Science.startResearch(driver)
-                Util.reset(driver)
+                try:
+                    General.openBuildingMenu(driver)
+                    researchAvailable = Science.openLibraryMenu(driver)
+                    if researchAvailable:
+                        Science.startResearch(driver)
+                    Util.reset(driver)
+                except Exception as e:
+                    print("Fehler beim der Forschung!\n")
+                    print(e)
+
 
 
             #Recruitment
@@ -137,6 +142,7 @@ while True:
             body.send_keys(Keys.ARROW_RIGHT)
             print("")
             time.sleep(3)
+            Util.reset(driver)
 
         driver.quit()
         time.sleep(3)

@@ -35,7 +35,7 @@ class General:
         print("Weltauswahl geladen...")
         time.sleep(float(generalWaitTime))
         #Click on latest played World
-        driver.find_element(By.XPATH, "/html/body/div[2]/div/div[2]/div[2]/div[1]").click()
+        driver.find_element(By.XPATH, '//*[text()="Deutsch 26 (empfohlen)"]').click()
         print("Auf Welt geklickt...")
         #Wait for World to load
         WebDriverWait(driver, 120).until(EC.presence_of_element_located((By.XPATH, '//*[text()="Profil"]')))

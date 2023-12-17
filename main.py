@@ -40,7 +40,7 @@ while True:
         driver = webdriver.Firefox(service=service, options=options)
         #driver = webdriver.Firefox(options=options)
         driver.set_window_size(1920, 1080)
-        driver.get("https://www.lordsandknights.com")
+        driver.get("https://www.lordsandknights.de")
         print("Webseite geladen...")
 
         #Login and load World

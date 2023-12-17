@@ -40,6 +40,7 @@ while True:
         #driver = webdriver.Firefox(options=options)
         driver.set_window_size(1920, 1080)
         driver.get("https://www.lordsandknights.com")
+        print("Webseite geladen...")
 
         #Login and load World
         try:

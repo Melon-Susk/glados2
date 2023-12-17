@@ -44,18 +44,16 @@ while True:
         print("Webseite geladen...")
 
         #Login and load World
-        #try:
-        login = General.loginAndWorldSelect(driver, EMAILS[i], PASSWORD, LOGINTIME, GENERALWAITTIME)
-        #Kill Pop-Ups
-        General.popupKiller(driver)
-        """
+        try:
+            login = General.loginAndWorldSelect(driver, EMAILS[i], PASSWORD, LOGINTIME, GENERALWAITTIME)
+            #Kill Pop-Ups
+            General.popupKiller(driver)
         except Exception as e:
             print("Fehler beim Login!\n")
             print(e)
             driver.quit()
             time.sleep(3)
             continue
-        """
         #Select Main Castle for loop start
         General.selectMainCastle(driver, CASTLENAMES[EMAILS[i]])
         loopStart = False
@@ -150,7 +148,7 @@ while True:
         time.sleep(3)
     
     print("Zyklus abgeschlossen. Nächster Zyklus in 60 Sekunden")
-    print("-----------------------------------------------------\n")
+    print("-----------------------------------------------------\n\n\n")
     time.sleep(60)
 
 

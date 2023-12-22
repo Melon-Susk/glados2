@@ -20,10 +20,10 @@ class Recruitment:
         except:
             pass
         try:
-            WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//*[text()="Defensive Einheiten"]')))
+            WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//*[text()="Mögliche Einheiten"]')))
             return True
         except:
-            print("Das Zeughausmenü konnte nicht geöffnet werden. Die Rekrutierung wird übersprungen!")
+            print("Das Zeughausmenü kann nicht geöffnet werden. Die Rekrutierungsfunktion wird übersprungen")
             return False
         
     @staticmethod
@@ -41,7 +41,7 @@ class Recruitment:
     @staticmethod
     def determineRecruitmentPlan(castleLevel, unitAmountDict):
         if castleLevel < 80:
-            return {"Speerträger": 0, "Armbrustschütze": 0, "Panzerreiter": 0, "Schwertkämpfer": 0, "Bogenschütze": 0, "Lanzenreiter": 0}
+            return {"Speerträger": 5, "Armbrustschütze": 0, "Panzerreiter": 0, "Schwertkämpfer": 0, "Bogenschütze": 0, "Lanzenreiter": 0}
         
         units = ["Speerträger", "Armbrustschütze", "Panzerreiter", "Schwertkämpfer", "Bogenschütze", "Lanzenreiter"]
         recruitmentDict = {}
@@ -58,5 +58,50 @@ class Recruitment:
             recruitmentDict[units[i]] = desiredAmount[i] - unitAmountDict[units[i]]
         
         return recruitmentDict
+    
+    @staticmethod
+    def getPossibleRecruitments(driver):
+        units = ["Speerträger", "Armbrustschütze", "Panzerreiter", "Schwertkämpfer", "Bogenschütze", "Lanzenreiter"]
+        possibleUnits = []
+
+        driver.find_element(By.XPATH, '//*[text()="Mögliche Einheiten"]').click()
+        WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//*[text()="Defensive Einheiten"]')))
+
+        unitScope = driver.find_element(By.XPATH, '//*[text()="Defensive Einheiten"]').find_element(By.XPATH, "ancestor::node()[1]")
+
+        for i in range(len(units)):
+            try:
+                unitScope.find_element(By.XPATH, f'.//*[contains(text(),"{units[i]}")]')
+                possibleUnits.append(units[i])
+            except:
+                continue
         
+        return possibleUnits
+
+    @staticmethod
+    def startRecruitment(driver, recruitmentDict, possibleUnits):
+        rdict = recruitmentDict
+        pUnits = possibleUnits
+
+        if len(pUnits) < 1:
+            print("Es können zurzeit keine Einheiten ausgebildet werden")
+            return
+
+        for i in range(len(pUnits)):
+            if rdict[pUnits[i]] > 0:
+                localScope = driver.find_element(By.XPATH, f'.//*[contains(text(),"{pUnits[i]}")]').find_element(By.XPATH, "ancestor::node()[3]")
+                localScope.find_element(By.TAG_NAME, 'button').click()
+
+                WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.TAG_NAME, 'input'))).send_keys(f"{rdict[pUnits[i]]}")
+                WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.CSS_SELECTOR, '.icon.icon-in-button.white.icon-game.icon-recruit')))
+                buttonDiv = driver.find_element(By.CSS_SELECTOR, '.icon.icon-in-button.white.icon-game.icon-recruit')
+                buttonDiv.find_element(By.XPATH, "ancestor::node()[1]").click()
+                try:
+                    WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, './/*[contains(text(),"Alle Rekrutierungen")]')))
+                    print(f"Rekrutierung gestartet für {pUnits[i]}")
+                    return
+                except:
+                    print(f"{pUnits[i]} konnte nicht ausgebildet werden!")
+                    continue
+
         

@@ -14,10 +14,17 @@ class Util:
     
     @staticmethod
     def reset(driver):
-        profileMenu = driver.find_element(By.XPATH, '//*[text()="Profil"]')
-        profileMenu.click()
-        WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//*[text()="Spielerübersicht"]')))
-        profileMenu.click()
+        for i in range(5):
+            try:
+                profileMenu = driver.find_element(By.XPATH, '//*[text()="Profil"]')
+                profileMenu.click()
+                WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//*[text()="Spielerübersicht"]')))
+                profileMenu.click()
+                break
+            except:
+                print(f"Reset fail {i+1}")
+                time.sleep(float(i))
+                continue
         try:
             WebDriverWait(driver, 1).until(EC.presence_of_element_located((By.XPATH, '//*[text()="Spielerübersicht"]')))
             return False

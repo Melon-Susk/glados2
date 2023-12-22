@@ -29,7 +29,11 @@ class Science:
         
     @staticmethod
     def startResearch(driver):
-        projects = driver.find_element(By.XPATH, '//*[text()="Verfügbare Forschung"]/ancestor::node()[1]')
+        try:
+            projects = driver.find_element(By.XPATH, '//*[text()="Verfügbare Forschung"]/ancestor::node()[1]')
+        except:
+            print("Es ist keine Forschung verfügbar")
+            return
         buttons = projects.find_elements(By.TAG_NAME, 'button')
 
         #Press Start Research Buttons

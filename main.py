@@ -7,6 +7,7 @@ from general import General
 from construction import Construction
 from recruitment import Recruitment
 from science import Science
+from missions import Missions
 from silver import Silver
 from util import Util
 import time
@@ -35,11 +36,14 @@ while True:
         #Instantiate Driver
         options = Options()
         options.add_argument("--headless")
+        #options.binary_location = r'C:/Users/Lukas.Gosch/AppData/Local/Mozilla Firefox/firefox.exe'
         firefox_binary_path = "/snap/bin/geckodriver"
         service = Service(executable_path=firefox_binary_path)
+        #service = Service(executable_path=r'C:/Users/Lukas.Gosch/Documents/Privat/geckodriver.exe')
         driver = webdriver.Firefox(service=service, options=options)
         #driver = webdriver.Firefox(options=options)
         driver.set_window_size(1920, 1080)
+        #driver.maximize_window()
         driver.get("https://www.lordsandknights.de")
         print("Webseite geladen...")
 
@@ -88,10 +92,10 @@ while True:
                     eligibleSilver = Silver.openKeepMenu(driver)
                     if eligibleSilver:
                         castlesSilver[name] = Silver.buySilver(driver)
-                    Util.reset(driver)
             except Exception as e:
                 print("Fehler bei der Silberbeschaffung!\n")
                 print(e)
+            Util.reset(driver)
 
 
             #Building Construction
@@ -102,11 +106,10 @@ while True:
                     buildingLevels = Construction.getBuildingLevels(driver)
                     buildOrderArray = Construction.createBuildOrder(buildingLevels, resourceDict)
                     Construction.startConstruction(driver, buildOrderArray)
-                Util.reset(driver)
             except Exception as e:
                 print("Fehler beim Gebäudeausbau!\n")
                 print(e)
-
+            Util.reset(driver)
 
 
             #Science
@@ -116,22 +119,37 @@ while True:
                     researchAvailable = Science.openLibraryMenu(driver)
                     if researchAvailable:
                         Science.startResearch(driver)
-                    Util.reset(driver)
                 except Exception as e:
-                    print("Fehler beim der Forschung!\n")
+                    print("Fehler bei der Forschung!\n")
                     print(e)
-
-
-            """
-            #Recruitment
-            if points > 80:
-                General.openBuildingMenu(driver)
-                eligibleRecruitment = Recruitment.openBarracksMenu(driver)
-                if eligibleRecruitment:
-                    amount = Recruitment.getCurrentUnitAmount(driver)
-                    recruitmentPlan = Recruitment.determineRecruitmentPlan(points, amount)
                 Util.reset(driver)
-            """
+
+            
+            #Recruitment
+            if points > 40:
+                try:
+                    General.openBuildingMenu(driver)
+                    eligibleRecruitment = Recruitment.openBarracksMenu(driver)
+                    if eligibleRecruitment:
+                        amount = Recruitment.getCurrentUnitAmount(driver)
+                        recruitmentPlan = Recruitment.determineRecruitmentPlan(points, amount)
+                        possibleRecruitments = Recruitment.getPossibleRecruitments(driver)
+                        Recruitment.startRecruitment(driver, recruitmentPlan, possibleRecruitments)
+                except Exception as e:
+                    print("Fehler bei der Rekrutierung!\n")
+                    print(e)
+                Util.reset(driver)
+            
+
+            #Missions
+            try:
+                General.openBuildingMenu(driver)
+                Missions.openTavernMenu(driver)
+                Missions.startAvailableMissions(driver)
+            except Exception as e:
+                    print("Fehler bei den Missionen!\n")
+                    print(e)
+            Util.reset(driver)
 
             #Get New Resource Amount and write to File
             resourceDict = General.getResourceAmount(driver)

@@ -7,6 +7,7 @@ import time
 from datetime import datetime
 import json
 import pandas as pd
+import pytz
 
 
 class Util:
@@ -103,7 +104,9 @@ class Util:
     
     @staticmethod
     def isNight():
-        jetzt = datetime.now()
+        timezone_de = pytz.timezone('Europe/Berlin')
+        jetzt = datetime.now(timezone_de)
+
         if jetzt.hour >= 23:
             return True
         elif jetzt.hour < 5:

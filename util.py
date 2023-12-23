@@ -104,7 +104,7 @@ class Util:
     @staticmethod
     def isNight():
         jetzt = datetime.now()
-        if jetzt.hour > 23:
+        if jetzt.hour >= 23:
             return True
         elif jetzt.hour < 5:
             return True

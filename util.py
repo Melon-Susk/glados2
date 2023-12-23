@@ -6,6 +6,7 @@ from selenium.webdriver.support import expected_conditions as EC
 import time
 from datetime import datetime
 import json
+import pandas as pd
 
 
 class Util:
@@ -71,3 +72,37 @@ class Util:
 
         with open(dateipfad, 'w', encoding='utf-8') as file:
             json.dump(daten, file)
+    
+    @staticmethod
+    def determineCastleAndSilverAmount():
+        # JSON-Daten laden
+        with open('resourceOverview.json', 'r') as file:
+            data = json.load(file)
+
+        # Liste für die Ergebnisse
+        ergebnisse = []
+
+        # Verarbeite jeden Top-Level-Schlüssel
+        for email, burgen in data.items():
+            anzahl_burgen = len(burgen)
+            summe_silber = sum(burg.get("Silber", 0) for burg in burgen.values())
+        
+            # Benötigtes Silber berechnen
+            ben_silber = anzahl_burgen * 1000 - 1000
+            if ben_silber <= summe_silber:
+                ben_silber = "SILBER AUSREICHEND"
+            else:
+                ben_silber = ben_silber - summe_silber
+
+            # Ergebnisse hinzufügen
+            ergebnisse.append({"E-Mail": email, "Anzahl Burgen": anzahl_burgen, "Summe Silber": summe_silber, "Noch benötigt": ben_silber})
+
+        # Erstelle einen DataFrame aus den Ergebnissen
+        df = pd.DataFrame(ergebnisse)
+        df.to_excel('silverOverview.xlsx', index=False)
+    
+    @staticmethod
+    def isNight():
+        jetzt = datetime.now()
+        return 0 <= jetzt.hour < 5
+

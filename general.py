@@ -43,6 +43,9 @@ class General:
         WebDriverWait(driver, 120).until(EC.presence_of_element_located((By.XPATH, '//*[text()="Profil"]')))
         time.sleep(int(loginWaitTime))
 
+        #Kill Pop-Ups
+        General.popupKiller(driver)
+
         #Validate Successfull World Loading
         profileMenu = driver.find_element(By.XPATH, '//*[text()="Profil"]')
         profileMenu.click()
@@ -86,6 +89,21 @@ class General:
             return False
     
     @staticmethod
+    def openTroopMenu(driver):
+        profileMenu = driver.find_element(By.XPATH, '//*[text()="Einheiten"]')
+        profileMenu.click()
+        time.sleep(1)
+    
+    @staticmethod
+    def checkForMovement(driver):
+        General.openTroopMenu(driver)
+        try:
+            WebDriverWait(driver, 1).until(EC.presence_of_element_located((By.XPATH, '//*[text()="Truppenbewegungen"]')))
+            return True
+        except:
+            return False
+    
+    @staticmethod
     def selectMainCastle(driver, castleName):
         for i in range(1000):
             currentName, points = General.getCastleNameAndPoints(driver)
@@ -105,6 +123,10 @@ class General:
                 driver.find_element(By.CSS_SELECTOR, '.event-pop-up-button.ButtonRedAccept').click()
                 print("Pop-Up gefunden und beseitigt!")
                 time.sleep(3)
+                try:
+                    driver.find_element(By.XPATH, '//*[text()="OK"]').click()
+                except:
+                    continue
             except:
                 break
         

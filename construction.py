@@ -24,7 +24,7 @@ class Construction:
         #Determine Eligible Buildings
         name, points = General.getCastleNameAndPoints(driver)
         if points < 100:
-            buildingNamesArray = ["Bauernhof", "Holzfäller", "Holzlager", "Steinbruch", "Steinlager", "Erzmine", "Erzlager"]
+            buildingNamesArray = ["Taverne", "Bauernhof", "Holzfäller", "Holzlager", "Steinbruch", "Steinlager", "Erzmine", "Erzlager"]
         else:
             buildingNamesArray = ["Bergfried", "Zeughaus", "Taverne", "Bibliothek", "Wehranlagen", "Markt", 
                   "Bauernhof", "Holzfäller", "Holzlager", "Steinbruch", "Steinlager", "Erzmine", "Erzlager"]
@@ -51,6 +51,10 @@ class Construction:
             levelDict["Bauernhof"] = levelDict["Bauernhof"] - 100
         elif resourceAmountDict["Untertanen"] < 100:
             levelDict["Bauernhof"] = levelDict["Bauernhof"] - 10
+        if levelDict["Taverne"] < 2:
+            levelDict["Taverne"] = levelDict["Taverne"] - 100
+        elif levelDict["Taverne"] < 4:
+            levelDict["Taverne"] = levelDict["Taverne"] - 5
 
         sortedBuildingArray = sorted(levelDict, key=levelDict.get)
         return sortedBuildingArray

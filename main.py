@@ -69,6 +69,8 @@ while True:
             #General Castle Data
             name, points = General.getCastleNameAndPoints(driver)
             resourceDict = General.getResourceAmount(driver)
+            troopMovement = General.checkForMovement(driver)
+            Util.reset(driver)
 
             #Check for Loop Completion
             if (name == CASTLENAMES[EMAILS[i]]) and (loopStart):
@@ -76,22 +78,16 @@ while True:
             loopStart = True
             castleSafety += 1
 
-            print(f"Ausgewählte Burg: {name}\nPunkte: {points}\nHolz: {resourceDict['Holz']}, Stein: {resourceDict['Stein']}, Erz: {resourceDict['Erz']}")
+            print(f"Ausgewählte Burg: {name}\nPunkte: {points}\nHolz: {resourceDict['Holz']}, Stein: {resourceDict['Stein']}, Erz: {resourceDict['Erz']}\nSilber: {resourceDict['Silber']}, Kupfer: {resourceDict['Kupfer']}")
 
 
             #Silver
             try:
-                silv = castlesSilver[name]
-            except:
-                castlesSilver[name] = datetime.now()
-                silv = castlesSilver[name]
-            newDay = Util.checkNewDay(silv)
-            try:
-                if newDay and (points > 60):
+                if (points > 120) and (not troopMovement) and Util.isNight():
                     General.openBuildingMenu(driver)
                     eligibleSilver = Silver.openKeepMenu(driver)
                     if eligibleSilver:
-                        castlesSilver[name] = Silver.buySilver(driver)
+                        Silver.buySilver(driver)
             except Exception as e:
                 print("Fehler bei der Silberbeschaffung!\n")
                 print(e)
@@ -126,7 +122,7 @@ while True:
 
             
             #Recruitment
-            if points > 40:
+            if not troopMovement:
                 try:
                     General.openBuildingMenu(driver)
                     eligibleRecruitment = Recruitment.openBarracksMenu(driver)
@@ -172,6 +168,8 @@ while True:
         driver.quit()
         time.sleep(3)
     
+    Util.determineCastleAndSilverAmount()
+    print("-----------------------------------------------------")
     print("Zyklus abgeschlossen. Nächster Zyklus in 60 Sekunden")
     print("-----------------------------------------------------\n\n\n")
     time.sleep(60)

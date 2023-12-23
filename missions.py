@@ -43,7 +43,11 @@ class Missions:
             return True
 
         for i in range(len(checkboxes)):
-            checkboxes[i].click()
-            time.sleep(0.5)
+            try:
+                checkboxes[i].click()
+                time.sleep(0.5)
+            except:
+                break
         
         missionsContainer.find_element(By.TAG_NAME, 'button').click()
+        print("Missionen gestartet")

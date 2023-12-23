@@ -56,5 +56,6 @@ class Silver:
         WebDriverWait(driver, 2).until(EC.presence_of_element_located((By.XPATH, '//*[text()="Silber eintauschen"]')))
         time.sleep(1)
         driver.find_element(By.XPATH, '//*[text()="Silber eintauschen"]').click()
+        print("SILBERBESCHAFFUNG GESTARTET")
         time.sleep(10)
 

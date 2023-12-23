@@ -69,7 +69,10 @@ while True:
             #General Castle Data
             name, points = General.getCastleNameAndPoints(driver)
             resourceDict = General.getResourceAmount(driver)
-            troopMovement = General.checkForMovement(driver)
+            try:
+                troopMovement = General.checkForMovement(driver)
+            except:
+                troopMovement = True
             Util.reset(driver)
 
             #Check for Loop Completion

@@ -35,8 +35,11 @@ class Construction:
 
         #Cycle through Building scopes to get number
         for i in range(len(buildingNamesArray)):
-            conLevel = buildingContainer.find_element(By.XPATH, f'.//*[text()="{buildingNamesArray[i]}"]/ancestor::node()[1]//*[contains(text(),"Ausbaustufe")]').text
-            conLevelNumb = re.findall(r'\d+', conLevel)
+            try:
+                conLevel = buildingContainer.find_element(By.XPATH, f'.//*[text()="{buildingNamesArray[i]}"]/ancestor::node()[1]//*[contains(text(),"Ausbaustufe")]').text
+                conLevelNumb = re.findall(r'\d+', conLevel)
+            except:
+                conLevelNumb = ["1000"]
             buildingLevelsDict[buildingNamesArray[i]] = int(conLevelNumb[0])
         
         return buildingLevelsDict

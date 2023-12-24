@@ -11,7 +11,6 @@ from missions import Missions
 from silver import Silver
 from util import Util
 import time
-from datetime import datetime
 
 #Global Variables
 EMAILS = []
@@ -98,21 +97,22 @@ while True:
 
 
             #Building Construction
-            try:
-                General.openBuildingMenu(driver)
-                activeConstruction = Construction.checkForActiveConstruction(driver)
-                if not activeConstruction:
-                    buildingLevels = Construction.getBuildingLevels(driver)
-                    buildOrderArray = Construction.createBuildOrder(buildingLevels, resourceDict)
-                    Construction.startConstruction(driver, buildOrderArray)
-            except Exception as e:
-                print("Fehler beim Gebäudeausbau!\n")
-                print(e)
-            Util.reset(driver)
+            if not (Util.isEvening() and (points > 120)):
+                try:
+                    General.openBuildingMenu(driver)
+                    activeConstruction = Construction.checkForActiveConstruction(driver)
+                    if not activeConstruction:
+                        buildingLevels = Construction.getBuildingLevels(driver)
+                        buildOrderArray = Construction.createBuildOrder(buildingLevels, resourceDict)
+                        Construction.startConstruction(driver, buildOrderArray)
+                except Exception as e:
+                    print("Fehler beim Gebäudeausbau!\n")
+                    print(e)
+                Util.reset(driver)
 
 
             #Science
-            if points > 60:
+            if (points > 60) and not (Util.isEvening() and (points > 120)):
                 try:
                     General.openBuildingMenu(driver)
                     researchAvailable = Science.openLibraryMenu(driver)
@@ -125,7 +125,7 @@ while True:
 
             
             #Recruitment
-            if not troopMovement:
+            if (not troopMovement) and not (Util.isEvening() and (points > 120)):
                 try:
                     General.openBuildingMenu(driver)
                     eligibleRecruitment = Recruitment.openBarracksMenu(driver)

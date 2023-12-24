@@ -48,9 +48,9 @@ class Recruitment:
         if castleLevel < 140:
             desiredAmount = [50,0,0,15,20,0]
         elif castleLevel < 200:
-            desiredAmount = [100,50,20,30,30,0]
+            desiredAmount = [100,50,20,50,50,0]
         elif castleLevel < 240:
-            desiredAmount = [300,300,100,50,50,20]
+            desiredAmount = [300,300,100,100,100,20]
         elif castleLevel < 300:
             desiredAmount = [600,600,600,325,425,425]
 

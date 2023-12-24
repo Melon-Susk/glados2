@@ -109,7 +109,16 @@ class Util:
 
         if jetzt.hour >= 23:
             return True
-        elif jetzt.hour < 5:
+        elif jetzt.hour < 4:
+            return True
+        return False
+    
+    @staticmethod
+    def isEvening():
+        timezone_de = pytz.timezone('Europe/Berlin')
+        jetzt = datetime.now(timezone_de)
+
+        if jetzt.hour > 19:
             return True
         return False
 

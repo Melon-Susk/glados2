@@ -11,6 +11,7 @@ from missions import Missions
 from silver import Silver
 from util import Util
 import time
+from datetime import datetime
 
 #Global Variables
 EMAILS = []
@@ -31,6 +32,8 @@ print(EMAILS)
 #ACCOUNT LOOP
 while True:
     i = 0
+    startTime = datetime.now()
+    print(f"------ Zyklus startet um {startTime.strftime("%H:%M")} Uhr ------")
     for i in range(len(EMAILS)):
         #Instantiate Driver
         options = Options()
@@ -80,12 +83,12 @@ while True:
             loopStart = True
             castleSafety += 1
 
-            print(f"Ausgewählte Burg: {name}\nPunkte: {points}\nHolz: {resourceDict['Holz']}, Stein: {resourceDict['Stein']}, Erz: {resourceDict['Erz']}\nSilber: {resourceDict['Silber']}, Kupfer: {resourceDict['Kupfer']}")
+            print(f"\nAusgewählte Burg: {name}\nPunkte: {points}\nHolz: {resourceDict['Holz']}, Stein: {resourceDict['Stein']}, Erz: {resourceDict['Erz']}\nSilber: {resourceDict['Silber']}, Kupfer: {resourceDict['Kupfer']}")
 
 
             #Silver
             try:
-                if (points > 120) and (not troopMovement) and Util.isNight():
+                if (points > 140) and (not troopMovement) and Util.isNight():
                     General.openBuildingMenu(driver)
                     eligibleSilver = Silver.openKeepMenu(driver)
                     if eligibleSilver:
@@ -97,7 +100,7 @@ while True:
 
 
             #Building Construction
-            if not (Util.isEvening() and (points > 120)):
+            if not (Util.isEvening() and (points > 140)):
                 try:
                     General.openBuildingMenu(driver)
                     activeConstruction = Construction.checkForActiveConstruction(driver)
@@ -112,7 +115,7 @@ while True:
 
 
             #Science
-            if (points > 60) and not (Util.isEvening() and (points > 120)):
+            if (points > 60) and (not Util.isEvening()) and (not Util.isNight()):
                 try:
                     General.openBuildingMenu(driver)
                     researchAvailable = Science.openLibraryMenu(driver)
@@ -125,7 +128,7 @@ while True:
 
             
             #Recruitment
-            if (not troopMovement) and not (Util.isEvening() and (points > 120)):
+            if (not troopMovement) and (not Util.isEvening()) and (not Util.isNight()):
                 try:
                     General.openBuildingMenu(driver)
                     eligibleRecruitment = Recruitment.openBarracksMenu(driver)
@@ -151,8 +154,12 @@ while True:
             Util.reset(driver)
 
             #Get New Resource Amount and write to File
-            resourceDict = General.getResourceAmount(driver)
-            Util.appendToOverviewJson('resourceOverview.json', EMAILS[i], name, resourceDict)
+            try:
+                resourceDict = General.getResourceAmount(driver)
+                Util.appendToOverviewJson('resourceOverview.json', EMAILS[i], name, resourceDict)
+            except Exception as e:
+                print("Fehler beim Verfassen des Resource Dicts!\n")
+                print(e)
 
             #Switch to next Castle
             try:
@@ -172,10 +179,14 @@ while True:
         time.sleep(3)
     
     Util.determineCastleAndSilverAmount()
-    print("-----------------------------------------------------")
+    timeDiff = datetime.now() - startTime
+    duration = int(timeDiff.total_seconds() / 60)
+    print("\n-----------------------------------------------------")
     print("Zyklus abgeschlossen. Nächster Zyklus in 60 Sekunden")
-    print("-----------------------------------------------------\n\n\n")
+    print(f"Dauer des Zyklus: {duration} Minuten")
+    print("-----------------------------------------------------")
     time.sleep(60)
+    print("\n\n\n")
 
 
 

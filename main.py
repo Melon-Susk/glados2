@@ -33,7 +33,7 @@ print(EMAILS)
 while True:
     i = 0
     startTime = datetime.now()
-    print(f"------ Zyklus startet um {startTime.strftime("%H:%M")} Uhr ------")
+    print(f"------ Zyklus startet um {startTime.strftime('%H:%M')} Uhr ------")
     for i in range(len(EMAILS)):
         #Instantiate Driver
         options = Options()

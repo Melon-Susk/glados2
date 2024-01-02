@@ -58,6 +58,21 @@ class Util:
             return None
     
     @staticmethod
+    def loadDatetimeJsonTodict(dateiname):
+        with open(dateiname, 'r') as file:
+            daten = json.load(file)
+        
+        # Konvertiere die String-Datumsangaben zurück in datetime-Objekte
+        for key, value in daten.items():
+            try:
+                daten[key] = datetime.strptime(value, "%Y-%m-%d %H:%M:%S")
+            except ValueError:
+                # Falls das Datum nicht im erwarteten Format ist, behalte den String bei
+                pass
+        
+        return daten
+    
+    @staticmethod
     def appendToOverviewJson(dateipfad, accountName, castleName, resourceDict):
         with open(dateipfad, 'r', encoding='utf-8') as file:
             file_content = file.read()
@@ -121,4 +136,21 @@ class Util:
         if jetzt.hour > 19:
             return True
         return False
+    
+    @staticmethod
+    def refreshDatetimeDict(datetime_dict, castlename_dict):
+        # Überprüfe jeden Schlüssel im referenz_dict
+        for key in castlename_dict:
+            # Wenn der Schlüssel im datetime_dict nicht existiert, füge ihn mit dem aktuellen Datum/Zeit hinzu
+            if key not in datetime_dict:
+                datetime_dict[key] = datetime.now()
+        
+        # Konvertiere datetime-Objekte zu Strings für JSON-Kompatibilität
+        for key, value in datetime_dict.items():
+            if isinstance(value, datetime):
+                datetime_dict[key] = value.strftime("%Y-%m-%d %H:%M:%S")
+
+        # Speichere das aktualisierte Dictionary als JSON-Datei
+        with open('timeSortedAccounts.json', 'w') as file:
+            json.dump(datetime_dict, file)
 

@@ -4,18 +4,30 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.firefox.service import Service
+from util import Util
 import time
 
 #Global Variables
 EMAILS = []
 PASSWORD = input("Passwort:")
-emailAmount = input("Accountanzahl:")
-startAccount = input("Startaccount:")
+MODE = input("Zeitmodus?")
 
-#Init Stuff
-for i in range(int(startAccount), int(emailAmount) + 1):
-    EMAILS.append(f"unvish112+glados{i}@gmail.com")
-print(EMAILS)
+if MODE != "":
+    emailAmount = input("Accountanzahl:")
+    startAccount = input("Startaccount:")
+
+    for i in range(int(startAccount), int(emailAmount) + 1):
+        EMAILS.append(f"unvish112+glados{i}@gmail.com")
+    print(EMAILS)
+else:
+    USEDACCOUNTS = {}
+    timeSortedAccounts = Util.loadDatetimeJsonTodict('timeSortedAccounts.json')
+    referenceAccounts = Util.loadJsonToDict('castlenames.json')
+
+    for key in timeSortedAccounts:
+        EMAILS.append(key)
+    
+    print(EMAILS)
 
 
 #ACCOUNT LOOP
@@ -61,6 +73,7 @@ while go:
         #Click on latest played World
         driver.find_element(By.XPATH, "/html/body/div[2]/div/div[2]/div[2]/div[1]").click()
 
+        del timeSortedAccounts[EMAILS[i]]
         nextAccount = input("Continue?")
 
         if nextAccount == "":
@@ -69,3 +82,7 @@ while go:
             driver.quit()
             go = False
             break
+
+
+#Update time sorted Accounts Dict
+Util.refreshDatetimeDict(timeSortedAccounts, referenceAccounts)

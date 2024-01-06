@@ -36,19 +36,19 @@ while go:
     i = 0
     for i in range(len(EMAILS)):
         #Instantiate Driver
-        options = Options()
-        options.binary_location = r'C:/Users/Lukas.Gosch/AppData/Local/Mozilla Firefox/firefox.exe'
-        service = Service(executable_path=r'C:/Users/Lukas.Gosch/Documents/Privat/geckodriver.exe')
-        driver = webdriver.Firefox(service=service, options=options)
+        #options = Options()
+        #options.binary_location = r'C:/Users/Lukas.Gosch/AppData/Local/Mozilla Firefox/firefox.exe'
+        #service = Service(executable_path=r'C:/Users/Lukas.Gosch/Documents/Privat/geckodriver.exe')
+        #driver = webdriver.Firefox(service=service, options=options)
 
-        #driver = webdriver.Firefox()
+        driver = webdriver.Firefox()
         driver.maximize_window()
         driver.get("https://www.lordsandknights.com")
 
         #Login and load World
         #wait until Email Form is loaded
         WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "/html/body/div[2]/div/div[2]/div[2]/div[1]/div[3]/form/div[1]/div[1]/input")))
-        time.sleep(float(1))
+        time.sleep(float(0.5))
 
         #Change language
         WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "/html/body/div[2]/div/div[2]/div[2]/div[1]/div[2]/div[1]/div/div[1]/div")))
@@ -69,7 +69,7 @@ while go:
 
         #Wait for World Selection Screen loading
         WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.XPATH, '//*[text()="Wähle eine Welt"]')))
-        time.sleep(float(1))
+        time.sleep(float(0.5))
         #Click on latest played World
         driver.find_element(By.XPATH, "/html/body/div[2]/div/div[2]/div[2]/div[1]").click()
 

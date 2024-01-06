@@ -2,6 +2,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
+from recruitment import Recruitment
 import time
 
 class Silver:
@@ -21,6 +22,8 @@ class Silver:
     
     @staticmethod
     def buySilver(driver):
+        unitAmount = Recruitment.getCurrentUnitAmount(driver)
+
         buyLevel = driver.find_element(By.XPATH, '//*[text()="Tauschbare Waren"]/ancestor::node()[1]')
         buyLevel.find_element(By.XPATH, './/*[text()="Silber"]').click()
 

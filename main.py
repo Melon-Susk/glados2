@@ -131,6 +131,15 @@ while True:
             if (not troopMovement) and (not Util.isEvening()) and (not Util.isNight()):
                 try:
                     General.openBuildingMenu(driver)
+                    eligibleMarketRecruitment = Recruitment.openMarketMenu(driver)
+                    if eligibleMarketRecruitment:
+                        Recruitment.recruitOchsenkarren(driver)
+                except Exception as e:
+                    print("Fehler bei der Rekrutierung von Ochsenkarren!\n")
+                    print(e)
+                Util.reset(driver)
+                try:
+                    General.openBuildingMenu(driver)
                     eligibleRecruitment = Recruitment.openBarracksMenu(driver)
                     if eligibleRecruitment:
                         amount = Recruitment.getCurrentUnitAmount(driver)

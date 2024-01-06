@@ -1,6 +1,7 @@
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
+from construction import Construction
 import time
 import re
 
@@ -14,7 +15,7 @@ class Recruitment:
         buildingContainer.find_element(By.XPATH, './/*[text()="Zeughaus"]').click()
         #Auf aktive Rekrutierungen prüfen
         try:
-            WebDriverWait(driver, 2).until(EC.presence_of_element_located((By.XPATH, '//*[text()="Alle Rekrutierungen fertigstellen"]')))
+            WebDriverWait(driver, 2).until(EC.presence_of_element_located((By.XPATH, './/*[contains(text(),"Alle Rekrutierungen")]')))
             print("Es sind noch Rekrutierungen im Gange. Die Rekrutierung wird übersprungen")
             return False
         except:
@@ -25,6 +26,65 @@ class Recruitment:
         except:
             print("Das Zeughausmenü kann nicht geöffnet werden. Die Rekrutierungsfunktion wird übersprungen")
             return False
+    
+    @staticmethod
+    def openMarketMenu(driver):
+        marketLevel = Construction.getBuildingLevels(driver)['Markt']
+        if marketLevel < 5:
+            return False
+
+        buildingContainer = driver.find_element(By.XPATH, '//*[text()="Hauptgebäude"]').find_element(By.XPATH, "ancestor::node()[2]")
+        buildingContainer.find_element(By.XPATH, './/*[text()="Markt"]').click()
+        #Auf aktive Rekrutierungen prüfen
+        try:
+            WebDriverWait(driver, 2).until(EC.presence_of_element_located((By.XPATH, './/*[contains(text(),"Alle Rekrutierungen")]')))
+            #print("Es sind noch Rekrutierungen im Gange. Die Rekrutierung von Ochsenkarren wird übersprungen")
+            return False
+        except:
+            pass
+        try:
+            WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//*[text()="Tauschbare Waren"]')))
+            return True
+        except:
+            print("Das Marktmenü kann nicht geöffnet werden. Die Rekrutierung von Ochsenkarren wird übersprungen")
+            return False
+    
+    @staticmethod
+    def recruitOchsenkarren(driver):
+        try:
+            unitData = driver.find_element(By.XPATH, './/*[contains(text(),"Ochsenkarren")]').text
+            unitAmount = re.findall(r'\d+', unitData)
+        except:
+            print(f"Für die Ochsenkarren konnte die aktuelle Anzahl nicht ermittelt werden! Sie werden nicht rekrutiert")
+            return
+        
+        amountToRecruit = 12 - int(unitAmount[0])
+        if amountToRecruit < 1:
+            return
+
+        try:
+            scrollDiv = driver.find_element(By.XPATH, './/*[contains(text(),"Ochsenkarren")]').find_element(By.XPATH, "ancestor::node()[4]")
+            time.sleep(1)
+            driver.execute_script("arguments[0].scrollTo(0, arguments[0].scrollHeight)", scrollDiv)
+            localScope = driver.find_element(By.XPATH, './/*[contains(text(),"Ochsenkarren")]').find_element(By.XPATH, "ancestor::node()[3]")
+            time.sleep(1)
+            localScope.find_element(By.TAG_NAME, 'button').click()
+        except:
+            print("Ochsenkarren können zurzeit nicht rekrutiert werden")
+            return
+        
+        try:
+            WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.TAG_NAME, 'input'))).send_keys(f"{amountToRecruit}")
+            WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.CSS_SELECTOR, '.icon.icon-in-button.white.icon-game.icon-recruit')))
+            buttonDiv = driver.find_element(By.CSS_SELECTOR, '.icon.icon-in-button.white.icon-game.icon-recruit')
+            buttonDiv.find_element(By.XPATH, "ancestor::node()[1]").click()
+            WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, './/*[contains(text(),"Alle Rekrutierungen")]')))
+            print("Rekrutierung gestartet für Ochsenkarren")
+            return
+        except Exception as e:
+            print("Fehler im Ausbildungsmenü der Ochsenkarren!\n")
+            print(e)
+            return
         
     @staticmethod
     def getCurrentUnitAmount(driver):
@@ -32,8 +92,12 @@ class Recruitment:
         unitAmountDict = {}
 
         for i in range(len(units)):
-            unitData = driver.find_element(By.XPATH, f'.//*[contains(text(),"{units[i]}")]').text
-            unitAmount = re.findall(r'\d+', unitData)
+            try:
+                unitData = driver.find_element(By.XPATH, f'.//*[contains(text(),"{units[i]}")]').text
+                unitAmount = re.findall(r'\d+', unitData)
+            except:
+                print(f"Für {units[i]} konnte die aktuelle Anzahl nicht ermittelt werden! Die Klasse wird nicht rekrutiert")
+                unitAmount = 10000
             unitAmountDict[units[i]] = int(unitAmount[0])
         
         return unitAmountDict
@@ -41,21 +105,25 @@ class Recruitment:
     @staticmethod
     def determineRecruitmentPlan(castleLevel, unitAmountDict):
         if castleLevel < 80:
-            return {"Speerträger": 5, "Armbrustschütze": 0, "Panzerreiter": 0, "Schwertkämpfer": 0, "Bogenschütze": 0, "Lanzenreiter": 0}
+            return {"Speerträger": 15, "Armbrustschütze": 0, "Panzerreiter": 0, "Schwertkämpfer": 0, "Bogenschütze": 15, "Lanzenreiter": 0}
         
         units = ["Speerträger", "Armbrustschütze", "Panzerreiter", "Schwertkämpfer", "Bogenschütze", "Lanzenreiter"]
         recruitmentDict = {}
         if castleLevel < 140:
-            desiredAmount = [50,0,0,15,20,0]
+            desiredAmount = [100,0,0,40,40,0]
         elif castleLevel < 200:
-            desiredAmount = [100,50,20,50,50,0]
+            desiredAmount = [200,0,50,100,100,0]
         elif castleLevel < 240:
-            desiredAmount = [300,300,100,100,100,20]
+            desiredAmount = [500,100,100,200,200,0]
         elif castleLevel < 300:
             desiredAmount = [600,600,600,325,425,425]
 
         for i in range(len(units)):
-            recruitmentDict[units[i]] = desiredAmount[i] - unitAmountDict[units[i]]
+            amountToRecruit = desiredAmount[i] - unitAmountDict[units[i]]
+            if amountToRecruit < 0:
+                amountToRecruit = 0
+
+            recruitmentDict[units[i]] = amountToRecruit
         
         return recruitmentDict
     

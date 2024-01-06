@@ -22,8 +22,6 @@ class Silver:
     
     @staticmethod
     def buySilver(driver):
-        unitAmount = Recruitment.getCurrentUnitAmount(driver)
-
         buyLevel = driver.find_element(By.XPATH, '//*[text()="Tauschbare Waren"]/ancestor::node()[1]')
         buyLevel.find_element(By.XPATH, './/*[text()="Silber"]').click()
 

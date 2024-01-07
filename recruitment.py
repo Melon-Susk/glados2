@@ -16,7 +16,7 @@ class Recruitment:
         #Auf aktive Rekrutierungen prüfen
         try:
             WebDriverWait(driver, 2).until(EC.presence_of_element_located((By.XPATH, './/*[contains(text(),"Alle Rekrutierungen")]')))
-            print("Es sind noch Rekrutierungen im Gange. Die Rekrutierung wird übersprungen")
+            print("Es werden noch Einheiten rekrutiert")
             return False
         except:
             pass

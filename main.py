@@ -12,6 +12,7 @@ from silver import Silver
 from util import Util
 import time
 from datetime import datetime
+import pytz
 
 #Global Variables
 EMAILS = []
@@ -20,6 +21,7 @@ EMAILAMOUNT = input("Accountanzahl:")
 LOGINTIME = input("Login Wartezeit:")
 GENERALWAITTIME = input("Allgemeine Wartezeit:")
 CASTLENAMES = Util.loadJsonToDict('castlenames.json')
+TIMEZONE = pytz.timezone('Europe/Berlin')
 
 #Init Stuff
 castlesSilver = {}
@@ -32,7 +34,7 @@ print(EMAILS)
 #ACCOUNT LOOP
 while True:
     i = 0
-    startTime = datetime.now()
+    startTime = datetime.now(TIMEZONE)
     print(f"------ Zyklus startet um {startTime.strftime('%H:%M')} Uhr ------")
     for i in range(len(EMAILS)):
         #Instantiate Driver
@@ -108,6 +110,8 @@ while True:
                         buildingLevels = Construction.getBuildingLevels(driver)
                         buildOrderArray = Construction.createBuildOrder(buildingLevels, resourceDict)
                         Construction.startConstruction(driver, buildOrderArray)
+                    else:
+                        print("Es werden noch Gebäude ausgebaut")
                 except Exception as e:
                     print("Fehler beim Gebäudeausbau!\n")
                     print(e)
@@ -188,7 +192,7 @@ while True:
         time.sleep(3)
     
     Util.determineCastleAndSilverAmount()
-    timeDiff = datetime.now() - startTime
+    timeDiff = datetime.now(TIMEZONE) - startTime
     duration = int(timeDiff.total_seconds() / 60)
     print("\n-----------------------------------------------------")
     print("Zyklus abgeschlossen. Nächster Zyklus in 60 Sekunden")

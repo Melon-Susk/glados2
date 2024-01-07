@@ -73,7 +73,9 @@ while go:
         #Click on latest played World
         driver.find_element(By.XPATH, "/html/body/div[2]/div/div[2]/div[2]/div[1]").click()
 
-        del timeSortedAccounts[EMAILS[i]]
+        if MODE == "":
+            del timeSortedAccounts[EMAILS[i]]
+
         nextAccount = input("Continue?")
 
         if nextAccount == "":
@@ -83,6 +85,6 @@ while go:
             go = False
             break
 
-
-#Update time sorted Accounts Dict
-Util.refreshDatetimeDict(timeSortedAccounts, referenceAccounts)
+if MODE == "":
+    #Update time sorted Accounts Dict
+    Util.refreshDatetimeDict(timeSortedAccounts, referenceAccounts)

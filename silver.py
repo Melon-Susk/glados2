@@ -53,7 +53,7 @@ class Silver:
 
         #driver.execute_script("arguments[0].scrollTop = arguments[0].scrollHeight", scrollLevel)
         WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//*[text()="Silber eintauschen"]')))
-        #driver.find_element(By.XPATH, '//*[text()="Silber eintauschen"]').click()
+        driver.find_element(By.XPATH, '//*[text()="Silber eintauschen"]').click()
         print("SILBERBESCHAFFUNG GESTARTET")
-        time.sleep(10)
+        time.sleep(5)
 

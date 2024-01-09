@@ -124,7 +124,7 @@ class Util:
 
         if jetzt.hour >= 23:
             return True
-        elif jetzt.hour < 4:
+        elif jetzt.hour < 7:
             return True
         return False
     

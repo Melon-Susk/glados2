@@ -4,6 +4,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 import time
 import re
+from datetime import datetime
 
 
 class General:
@@ -129,5 +130,63 @@ class General:
                     continue
             except:
                 break
+    
+    @staticmethod
+    def silverMode(timezone, sleep, points):
+        if sleep:
+            return False
+        
+        jetzt = datetime.now(timezone)
+        if (jetzt.hour >= 23) and (points > 140):
+            return True
+        if (jetzt.hour < 8) and (points > 200):
+            return True
+        return False
+
+    @staticmethod
+    def buildMode(timezone, sleep, points):
+        if sleep:
+            return False
+
+        jetzt = datetime.now(timezone)
+        if (jetzt.hour >= 20) and (points > 140):
+            return False
+        if (jetzt.hour < 9) and (points > 200):
+            return False
+        return True
+    
+    @staticmethod
+    def scienceMode(timezone, sleep, points):
+        if sleep:
+            return False
+
+        if points < 60:
+            return False
+
+        jetzt = datetime.now(timezone)
+        if jetzt.hour >= 18:
+            return False
+        if jetzt.hour < 10:
+            return False
+        return True
+    
+    @staticmethod
+    def recruitMode(timezone, sleep):
+        if sleep:
+            return False
+
+        jetzt = datetime.now(timezone)
+        if jetzt.hour >= 20:
+            return False
+        if jetzt.hour < 9:
+            return False
+        return True
+    
+    @staticmethod
+    def sleepTime(timezone):
+        jetzt = datetime.now(timezone)
+        if jetzt.hour < 7:
+            return True
+        return False
         
 

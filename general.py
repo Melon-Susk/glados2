@@ -176,7 +176,7 @@ class General:
             return False
 
         jetzt = datetime.now(timezone)
-        if jetzt.hour >= 20:
+        if jetzt.hour >= 19:
             return False
         if jetzt.hour < 9:
             return False

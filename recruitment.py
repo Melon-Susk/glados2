@@ -110,11 +110,11 @@ class Recruitment:
         units = ["Speerträger", "Armbrustschütze", "Panzerreiter", "Schwertkämpfer", "Bogenschütze", "Lanzenreiter"]
         recruitmentDict = {}
         if castleLevel < 140:
-            desiredAmount = [100,0,0,40,40,0]
+            desiredAmount = [100,0,20,40,50,0]
         elif castleLevel < 200:
-            desiredAmount = [200,0,50,100,100,0]
+            desiredAmount = [100,0,50,100,100,0]
         elif castleLevel < 240:
-            desiredAmount = [500,100,100,200,200,0]
+            desiredAmount = [300,100,100,200,200,0]
         elif castleLevel < 300:
             desiredAmount = [600,600,600,325,425,425]
 

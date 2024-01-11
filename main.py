@@ -93,16 +93,25 @@ while True:
 
 
                 #Silver
-                try:
-                    if General.silverMode(TIMEZONE, sleep, points):
-                        General.openBuildingMenu(driver)
-                        eligibleSilver = Silver.openKeepMenu(driver)
-                        if eligibleSilver:
-                            Silver.buySilver(driver)
-                except Exception as e:
-                    print("Fehler bei der Silberbeschaffung!\n")
-                    print(e)
-                Util.reset(driver)
+                if General.silverMode(TIMEZONE, sleep, points):
+                    s_i = 0
+                    for s_i in range(3):
+                        try:
+                            General.openBuildingMenu(driver)
+                            eligibleSilver = Silver.openKeepMenu(driver)
+                            if eligibleSilver:
+                                Silver.buySilver(driver)
+                                break
+                            else:
+                                time.sleep(5)
+                        except Exception as e:
+                            print("Fehler bei der Silberbeschaffung!\n")
+                            print(e)
+                            time.sleep(5)
+                            Util.reset(driver)
+                            print("Neuer Versuch...")
+                            time.sleep(1)
+                    Util.reset(driver)
 
 
                 #Building Construction

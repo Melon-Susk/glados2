@@ -110,13 +110,11 @@ class Recruitment:
         units = ["Speerträger", "Armbrustschütze", "Panzerreiter", "Schwertkämpfer", "Bogenschütze", "Lanzenreiter"]
         recruitmentDict = {}
         if castleLevel < 140:
-            desiredAmount = [100,0,20,40,50,0]
+            desiredAmount = [100,0,20,100,100,0]
         elif castleLevel < 200:
-            desiredAmount = [100,0,50,100,100,0]
-        elif castleLevel < 240:
-            desiredAmount = [300,100,100,200,200,0]
-        elif castleLevel < 300:
-            desiredAmount = [600,600,600,325,425,425]
+            desiredAmount = [600,600,100,500,500,0]
+        else:
+            desiredAmount = [600,600,500,500,500,400]
 
         for i in range(len(units)):
             amountToRecruit = desiredAmount[i] - unitAmountDict[units[i]]
@@ -124,8 +122,10 @@ class Recruitment:
                 amountToRecruit = 0
 
             recruitmentDict[units[i]] = amountToRecruit
+
+        sortedRecruitmentDict = dict(sorted(recruitmentDict.items(), key=lambda item: item[1], reverse=True))
         
-        return recruitmentDict
+        return sortedRecruitmentDict
     
     @staticmethod
     def getPossibleRecruitments(driver):
@@ -149,7 +149,11 @@ class Recruitment:
     @staticmethod
     def startRecruitment(driver, recruitmentDict, possibleUnits):
         rdict = recruitmentDict
-        pUnits = possibleUnits
+        pUnits = []
+
+        for key in rdict:
+            if key in possibleUnits:
+                pUnits.append(key)
 
         if len(pUnits) < 1:
             print("Es können zurzeit keine Einheiten ausgebildet werden")

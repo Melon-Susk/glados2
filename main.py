@@ -19,6 +19,7 @@ import os
 EMAILS = []
 PASSWORD = input("Passwort:")
 EMAILAMOUNT = input("Accountanzahl:")
+FILLERACCS = input("Füller-Accountanzahl:")
 LOGINTIME = input("Login Wartezeit:")
 GENERALWAITTIME = input("Allgemeine Wartezeit:")
 CASTLENAMES = Util.loadJsonToDict('castlenames.json')
@@ -30,17 +31,30 @@ sleep = False
 
 for i in range(1, int(EMAILAMOUNT) + 1):
     EMAILS.append(f"unvish112+glados{i}@gmail.com")
+
+if int(FILLERACCS) > 0:
+    for i in range(1, int(FILLERACCS) + 1):
+        EMAILS.append(f"pauljay1245+chell{i}@outlook.de")
+
 print(EMAILS)
 
 
-#ACCOUNT LOOP
+#MAIN LOOP
 while True:
     sleep = General.sleepTime(TIMEZONE)
     if not sleep:
         i = 0
+        filler = False
         startTime = datetime.now(TIMEZONE)
         print(f"------ Zyklus startet um {startTime.strftime('%H:%M')} Uhr ------")
+
+        #ACCOUNT LOOP
         for i in range(len(EMAILS)):
+            #Check Account Type
+            if not "glados" in EMAILS[i]:
+                filler = True
+                print("----- Fillermodus aktiviert! -----")
+
             #Instantiate Driver
             options = Options()
             options.add_argument("--headless")
@@ -93,7 +107,7 @@ while True:
 
 
                 #Silver
-                if General.silverMode(TIMEZONE, sleep, points):
+                if General.silverMode(TIMEZONE, sleep, points, filler):
                     s_i = 0
                     for s_i in range(3):
                         try:
@@ -145,7 +159,7 @@ while True:
 
                 
                 #Recruitment
-                if General.recruitMode(TIMEZONE, sleep):
+                if General.recruitMode(TIMEZONE, sleep, filler):
                     try:
                         General.openBuildingMenu(driver)
                         eligibleMarketRecruitment = Recruitment.openMarketMenu(driver)
@@ -170,22 +184,24 @@ while True:
                 
 
                 #Missions
-                try:
-                    General.openBuildingMenu(driver)
-                    Missions.openTavernMenu(driver)
-                    Missions.startAvailableMissions(driver)
-                except Exception as e:
-                        print("Fehler bei den Missionen!\n")
-                        print(e)
-                Util.reset(driver)
+                if filler == False:
+                    try:
+                        General.openBuildingMenu(driver)
+                        Missions.openTavernMenu(driver)
+                        Missions.startAvailableMissions(driver)
+                    except Exception as e:
+                            print("Fehler bei den Missionen!\n")
+                            print(e)
+                    Util.reset(driver)
 
                 #Get New Resource Amount and write to File
-                try:
-                    resourceDict = General.getResourceAmount(driver)
-                    Util.appendToOverviewJson('resourceOverview.json', EMAILS[i], name, resourceDict)
-                except Exception as e:
-                    print("Fehler beim Verfassen des Resource Dicts!\n")
-                    print(e)
+                if filler == False:
+                    try:
+                        resourceDict = General.getResourceAmount(driver)
+                        Util.appendToOverviewJson('resourceOverview.json', EMAILS[i], name, resourceDict)
+                    except Exception as e:
+                        print("Fehler beim Verfassen des Resource Dicts!\n")
+                        print(e)
 
                 #Switch to next Castle
                 try:

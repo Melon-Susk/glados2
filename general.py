@@ -39,7 +39,7 @@ class General:
         print("Weltauswahl geladen...")
         time.sleep(float(generalWaitTime))
         #Click on latest played World
-        driver.find_element(By.XPATH, '//*[text()="Deutsch 26 (empfohlen)"]').click()
+        driver.find_element(By.XPATH, '//*[text()="Germanien X (DE) (empfohlen)"]').click()
         #Wait for World to load
         WebDriverWait(driver, 120).until(EC.presence_of_element_located((By.XPATH, '//*[text()="Profil"]')))
         time.sleep(int(loginWaitTime))
@@ -132,8 +132,11 @@ class General:
                 break
     
     @staticmethod
-    def silverMode(timezone, sleep, points):
+    def silverMode(timezone, sleep, points, filler):
         if sleep:
+            return False
+
+        if filler:
             return False
         
         jetzt = datetime.now(timezone)
@@ -171,8 +174,11 @@ class General:
         return True
     
     @staticmethod
-    def recruitMode(timezone, sleep):
+    def recruitMode(timezone, sleep, filler):
         if sleep:
+            return False
+
+        if filler:
             return False
 
         jetzt = datetime.now(timezone)

@@ -132,11 +132,11 @@ class General:
                 break
     
     @staticmethod
-    def silverMode(timezone, sleep, points, filler):
+    def silverMode(timezone, sleep, points, filler, castleSafety=2):
         if sleep:
             return False
 
-        if filler:
+        if filler and (castleSafety > 1):
             return False
         
         jetzt = datetime.now(timezone)

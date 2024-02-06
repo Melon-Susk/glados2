@@ -57,15 +57,15 @@ while True:
 
             #Instantiate Driver
             options = Options()
-            options.add_argument("--headless")
+            #options.add_argument("--headless")
             #options.binary_location = r'C:/Users/Lukas.Gosch/AppData/Local/Mozilla Firefox/firefox.exe'
-            firefox_binary_path = "/snap/bin/geckodriver"
-            service = Service(executable_path=firefox_binary_path)
+            #firefox_binary_path = "/snap/bin/geckodriver"
+            #service = Service(executable_path=firefox_binary_path)
             #service = Service(executable_path=r'C:/Users/Lukas.Gosch/Documents/Privat/geckodriver.exe')
-            driver = webdriver.Firefox(service=service, options=options)
-            #driver = webdriver.Firefox(options=options)
-            driver.set_window_size(1920, 1080)
-            #driver.maximize_window()
+            #driver = webdriver.Firefox(service=service, options=options)
+            driver = webdriver.Firefox(options=options)
+            #driver.set_window_size(1920, 1080)
+            driver.maximize_window()
             driver.get("https://www.lordsandknights.de")
             print("Webseite geladen...")
 
@@ -107,7 +107,7 @@ while True:
 
 
                 #Silver
-                if General.silverMode(TIMEZONE, sleep, points, filler):
+                if General.silverMode(TIMEZONE, sleep, points, filler, castleSafety):
                     s_i = 0
                     for s_i in range(3):
                         try:

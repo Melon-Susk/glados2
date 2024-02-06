@@ -16,6 +16,7 @@ import pytz
 import os
 
 #Global Variables
+MAINACCOUNT = "unvish112+glados@gmail.com"
 EMAILS = []
 PASSWORD = input("Passwort:")
 EMAILAMOUNT = input("Accountanzahl:")
@@ -28,6 +29,9 @@ TIMEZONE = pytz.timezone('Europe/Berlin')
 #Init Stuff
 castlesSilver = {}
 sleep = False
+firstCycle = True
+
+EMAILS.append(MAINACCOUNT)
 
 for i in range(1, int(EMAILAMOUNT) + 1):
     EMAILS.append(f"unvish112+glados{i}@gmail.com")
@@ -42,18 +46,24 @@ print(EMAILS)
 #MAIN LOOP
 while True:
     sleep = General.sleepTime(TIMEZONE)
-    if not sleep:
+    if (not sleep) or firstCycle:
         i = 0
         filler = False
+        firstCycle = False
         startTime = datetime.now(TIMEZONE)
         print(f"------ Zyklus startet um {startTime.strftime('%H:%M')} Uhr ------")
 
+
         #ACCOUNT LOOP
         for i in range(len(EMAILS)):
+            filler = False
             #Check Account Type
+            if (EMAILS[i] == MAINACCOUNT) and not General.mainAccountMode(TIMEZONE, sleep):
+                continue
+
             if not "glados" in EMAILS[i]:
                 filler = True
-                print("----- Fillermodus aktiviert! -----")
+                print("--- Fillermodus aktiv ---")
 
             #Instantiate Driver
             options = Options()
@@ -124,7 +134,6 @@ while True:
                             time.sleep(5)
                             Util.reset(driver)
                             print("Neuer Versuch...")
-                            time.sleep(1)
                     Util.reset(driver)
 
 
@@ -209,7 +218,7 @@ while True:
                     body = driver.find_element(By.TAG_NAME, 'body')
                     body.send_keys(Keys.ARROW_RIGHT)
                     print("")
-                    time.sleep(2)
+                    time.sleep(1)
                     Util.reset(driver)
                 except Exception as e:
                     print("Fehler beim Burgenwechsel! Der Account wird übersprungen!\n")

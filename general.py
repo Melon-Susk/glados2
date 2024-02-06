@@ -174,17 +174,29 @@ class General:
         return True
     
     @staticmethod
-    def recruitMode(timezone, sleep, filler):
+    def recruitMode(timezone, sleep, filler, castleSafety=2):
         if sleep:
             return False
 
-        if filler:
+        if filler and (castleSafety > 1):
             return False
 
         jetzt = datetime.now(timezone)
         if jetzt.hour >= 19:
             return False
         if jetzt.hour < 9:
+            return False
+        return True
+    
+    @staticmethod
+    def mainAccountMode(timezone, sleep):
+        if sleep:
+            return False
+        
+        jetzt = datetime.now(timezone)
+        if jetzt.hour >= 18:
+            return False
+        if jetzt.hour < 11:
             return False
         return True
     

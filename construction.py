@@ -57,7 +57,7 @@ class Construction:
         if levelDict["Taverne"] < 2:
             levelDict["Taverne"] = levelDict["Taverne"] - 100
         elif levelDict["Taverne"] > 3:
-            levelDict["Taverne"] = levelDict["Taverne"] + 5
+            levelDict["Taverne"] = levelDict["Taverne"] + 10
         if levelDict["Markt"] >= 5:
             levelDict["Markt"] = levelDict["Markt"] + 1000
 

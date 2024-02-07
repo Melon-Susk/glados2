@@ -7,6 +7,8 @@ import time
 from datetime import datetime
 import json
 import pandas as pd
+from openpyxl import load_workbook
+from openpyxl.utils import get_column_letter
 import pytz
 
 
@@ -90,7 +92,7 @@ class Util:
             json.dump(daten, file)
     
     @staticmethod
-    def determineCastleAndSilverAmount():
+    def determineCastleAndSilverAmount(excel_path='silverOverview.xlsx'):
         # JSON-Daten laden
         with open('resourceOverview.json', 'r') as file:
             data = json.load(file)
@@ -104,7 +106,7 @@ class Util:
             summe_silber = sum(burg.get("Silber", 0) for burg in burgen.values())
         
             # Benötigtes Silber berechnen
-            ben_silber = anzahl_burgen * 1000 - 1000
+            ben_silber = anzahl_burgen * 1000
             if ben_silber <= summe_silber:
                 ben_silber = "SILBER AUSREICHEND"
             else:
@@ -115,7 +117,36 @@ class Util:
 
         # Erstelle einen DataFrame aus den Ergebnissen
         df = pd.DataFrame(ergebnisse)
-        df.to_excel('silverOverview.xlsx', index=False)
+        df.to_excel(excel_path, index=False, engine='openpyxl')
+    
+    @staticmethod
+    def autoAdjustColumnWidths(excel_path='silverOverview.xlsx'):
+        # Lade das Workbook
+        wb = load_workbook(excel_path)
+        
+        # Gehe durch alle Worksheets im Workbook
+        for sheet_name in wb.sheetnames:
+            ws = wb[sheet_name]
+            
+            # Durchlaufe alle Spalten im Worksheet
+            for col in ws.columns:
+                max_length = 0
+                column = col[0].column   # Hole die Spaltenbuchstaben/nummer
+                
+                # Bestimme die maximale Länge des Inhalts in der Spalte
+                for cell in col:
+                    try:
+                        if len(str(cell.value)) > max_length:
+                            max_length = len(cell.value)
+                    except:
+                        pass
+                
+                # Passe die Spaltenbreite an (füge 2 hinzu für ein bisschen Puffer)
+                adjusted_width = (max_length + 2)
+                ws.column_dimensions[get_column_letter(column)].width = adjusted_width
+    
+        # Speichere die Änderungen im Workbook
+        wb.save(excel_path)
     
     @staticmethod
     def isNight():

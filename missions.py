@@ -14,9 +14,8 @@ class Missions:
         buildingContainer.find_element(By.XPATH, './/*[text()="Taverne"]').click()
         try:
             WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//*[text()="Mögliche Missionen"]')))
-            time.sleep(0.5)
             driver.find_element(By.XPATH, '//*[text()="Mögliche Missionen"]').click()
-            time.sleep(1)
+            time.sleep(0.5)
             return True
         except:
             print("Das Tavernenmenü konnte nicht geöffnet werden. Die Missionen werden übersprungen!")
@@ -45,7 +44,7 @@ class Missions:
         for i in range(len(checkboxes)):
             try:
                 checkboxes[i].click()
-                time.sleep(0.5)
+                time.sleep(0.1)
             except:
                 break
         

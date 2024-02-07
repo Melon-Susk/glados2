@@ -76,5 +76,4 @@ class Construction:
             started = Construction.checkForActiveConstruction(driver, waitAmount=5)
             if started:
                 print(f"Gebäudeausbau gestartet für {sortedBuildingArray[i]}")
-                time.sleep(1)
                 break

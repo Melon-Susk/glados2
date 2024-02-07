@@ -104,15 +104,15 @@ class Recruitment:
         
     @staticmethod
     def determineRecruitmentPlan(castleLevel, unitAmountDict):
-        if castleLevel < 80:
-            return {"Speerträger": 15, "Armbrustschütze": 0, "Panzerreiter": 0, "Schwertkämpfer": 0, "Bogenschütze": 15, "Lanzenreiter": 0}
+        if castleLevel < 60:
+            return {"Speerträger": 5, "Armbrustschütze": 0, "Panzerreiter": 0, "Schwertkämpfer": 0, "Bogenschütze": 0, "Lanzenreiter": 0}
         
         units = ["Speerträger", "Armbrustschütze", "Panzerreiter", "Schwertkämpfer", "Bogenschütze", "Lanzenreiter"]
         recruitmentDict = {}
         if castleLevel < 140:
             desiredAmount = [100,0,20,100,100,0]
         elif castleLevel < 200:
-            desiredAmount = [600,600,100,500,500,0]
+            desiredAmount = [600,600,400,500,500,100]
         else:
             desiredAmount = [600,600,500,500,500,400]
 

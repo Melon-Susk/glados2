@@ -41,6 +41,7 @@ if int(FILLERACCS) > 0:
         EMAILS.append(f"pauljay1245+chell{i}@outlook.de")
 
 print(EMAILS)
+print("\n")
 
 
 #MAIN LOOP
@@ -56,7 +57,6 @@ while True:
 
         #ACCOUNT LOOP
         for i in range(len(EMAILS)):
-            filler = False
             #Check Account Type
             if (EMAILS[i] == MAINACCOUNT) and not General.mainAccountMode(TIMEZONE, sleep):
                 continue
@@ -64,6 +64,8 @@ while True:
             if not "glados" in EMAILS[i]:
                 filler = True
                 print("--- Fillermodus aktiv ---")
+            else:
+                filler = False
 
             #Instantiate Driver
             options = Options()
@@ -168,7 +170,7 @@ while True:
 
                 
                 #Recruitment
-                if General.recruitMode(TIMEZONE, sleep, filler):
+                if General.recruitMode(TIMEZONE, sleep, filler, castleSafety):
                     try:
                         General.openBuildingMenu(driver)
                         eligibleMarketRecruitment = Recruitment.openMarketMenu(driver)

@@ -1,6 +1,8 @@
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.action_chains import ActionChains
 from general import General
 import time
 import re
@@ -14,11 +16,15 @@ class Construction:
     def checkForActiveConstruction(driver, waitAmount=2):
         try:
             WebDriverWait(driver, waitAmount).until(EC.presence_of_element_located((By.XPATH, '//*[text()="Alle Gebäude fertigstellen"]')))
-            return True
+            try:
+                buildingContainer = driver.find_element(By.XPATH, '//*[text()="Hauptgebäude"]').find_element(By.XPATH, "ancestor::node()[2]")
+                buildingContainer.find_element(By.XPATH, './/*[text()="1"]')
+            except:
+                return 0
+            return 1
         except:
-            return False
+            return 2
 
-    
     @staticmethod
     def getBuildingLevels(driver):
         #Determine Eligible Buildings
@@ -50,6 +56,9 @@ class Construction:
         levelDict["Holzfäller"] = levelDict["Holzfäller"] - 15
         levelDict["Steinbruch"] = levelDict["Steinbruch"] - 15
         levelDict["Erzmine"] = levelDict["Erzmine"] - 15
+        levelDict["Holzlager"] = levelDict["Holzlager"] - 5
+        levelDict["Steinlager"] = levelDict["Steinlager"] - 5
+        levelDict["Erzlager"] = levelDict["Erzlager"] - 5
         if resourceAmountDict["Untertanen"] < 10:
             levelDict["Bauernhof"] = levelDict["Bauernhof"] - 100
         elif resourceAmountDict["Untertanen"] < 100:
@@ -65,15 +74,30 @@ class Construction:
         return sortedBuildingArray
     
     @staticmethod
-    def startConstruction(driver, sortedBuildingArray):
+    def startConstruction(driver, sortedBuildingArray, conAmount):
+        if conAmount < 1:
+            return
+        
+        buildSlots = conAmount
         #Limit Scope to Building Menu
+        actions = ActionChains(driver)
         buildingContainer = driver.find_element(By.XPATH, '//*[text()="Hauptgebäude"]').find_element(By.XPATH, "ancestor::node()[2]")
+        actions.move_to_element(buildingContainer).click().perform()
+        actions.send_keys(Keys.PAGE_DOWN).perform()
 
         #Cycle through Build Order List
-        for i in range(len(sortedBuildingArray)):
-            buildButton = buildingContainer.find_element(By.XPATH, f'.//*[text()="{sortedBuildingArray[i]}"]/ancestor::node()[3]//button')
-            buildButton.click()
-            started = Construction.checkForActiveConstruction(driver, waitAmount=5)
-            if started:
-                print(f"Gebäudeausbau gestartet für {sortedBuildingArray[i]}")
-                break
+        for j in range(conAmount):
+            if buildSlots < 1:
+                return
+            
+            buildingRange = range(len(sortedBuildingArray))
+            for i in buildingRange:
+                targetBuilding = sortedBuildingArray.pop(i)
+                buildButton = buildingContainer.find_element(By.XPATH, f'.//*[text()="{targetBuilding}"]/ancestor::node()[3]//button')
+                buildButton.click()
+                started = Construction.checkForActiveConstruction(driver, waitAmount=5)
+                if started < buildSlots:
+                    print(f"Gebäudeausbau gestartet für {targetBuilding}")
+                    buildSlots -= 1
+                    time.sleep(2)
+                    break

@@ -115,7 +115,7 @@ while True:
                 loopStart = True
                 castleSafety += 1
 
-                print(f"\nAusgewählte Burg: {name}\nPunkte: {points}\nHolz: {resourceDict['Holz']}, Stein: {resourceDict['Stein']}, Erz: {resourceDict['Erz']}\nSilber: {resourceDict['Silber']}, Kupfer: {resourceDict['Kupfer']}")
+                print(f"\nAusgewählte Burg: {name} um {startTime.strftime('%H:%M')} Uhr\nPunkte: {points}\nHolz: {resourceDict['Holz']}, Stein: {resourceDict['Stein']}, Erz: {resourceDict['Erz']}\nSilber: {resourceDict['Silber']}, Kupfer: {resourceDict['Kupfer']}")
 
 
                 #Silver
@@ -143,13 +143,13 @@ while True:
                 if General.buildMode(TIMEZONE, sleep, points):
                     try:
                         General.openBuildingMenu(driver)
-                        activeConstruction = Construction.checkForActiveConstruction(driver)
-                        if not activeConstruction:
+                        conAmount = Construction.checkForActiveConstruction(driver)
+                        if conAmount > 0:
                             buildingLevels = Construction.getBuildingLevels(driver)
                             buildOrderArray = Construction.createBuildOrder(buildingLevels, resourceDict)
-                            Construction.startConstruction(driver, buildOrderArray)
+                            Construction.startConstruction(driver, buildOrderArray, conAmount)
                         else:
-                            print("Es werden noch Gebäude ausgebaut")
+                            print("Es werden noch 2 Gebäude ausgebaut")
                     except Exception as e:
                         print("Fehler beim Gebäudeausbau!\n")
                         print(e)

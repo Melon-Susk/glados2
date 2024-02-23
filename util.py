@@ -27,6 +27,10 @@ class Util:
                 break
             except:
                 print(f"Reset fail {i+1}")
+                try:
+                    driver.find_element(By.CSS_SELECTOR, '.icon.icon-tutorial.icon-close-button').click()
+                except:
+                    pass
                 time.sleep(float(i))
                 continue
         try:

@@ -61,7 +61,7 @@ while True:
             if (EMAILS[i] == MAINACCOUNT) and not General.mainAccountMode(TIMEZONE, sleep):
                 continue
 
-            if not "glados" in EMAILS[i]:
+            if not "schradin" in EMAILS[i]:
                 filler = True
                 print("--- Fillermodus aktiv ---")
             else:

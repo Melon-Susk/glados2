@@ -34,7 +34,7 @@ firstCycle = True
 EMAILS.append(MAINACCOUNT)
 
 for i in range(1, int(EMAILAMOUNT) + 1):
-    EMAILS.append(f"unvish112+glados{i}@gmail.com")
+    EMAILS.append(f"pauljay1245+schradin{i}@outlook.de")
 
 if int(FILLERACCS) > 0:
     for i in range(1, int(FILLERACCS) + 1):

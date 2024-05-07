@@ -37,8 +37,8 @@ for i in range(1, int(EMAILAMOUNT) + 1):
     EMAILS.append(f"pauljay1245+schradin{i}@outlook.de")
 
 if int(FILLERACCS) > 0:
-    for i in range(1, int(FILLERACCS) + 1):
-        EMAILS.append(f"pauljay1245+chell{i}@outlook.de")
+    for i in range((EMAILAMOUNT + 1), int(FILLERACCS) + 1):
+        EMAILS.append(f"pauljay1245+schradin{i}@outlook.de")
 
 print(EMAILS)
 print("\n")
@@ -61,7 +61,7 @@ while True:
             if (EMAILS[i] == MAINACCOUNT) and not General.mainAccountMode(TIMEZONE, sleep):
                 continue
 
-            if not "schradin" in EMAILS[i]:
+            if (not "schradin" in EMAILS[i]) and (not "glados" in EMAILS[i]):
                 filler = True
                 print("--- Fillermodus aktiv ---")
             else:
@@ -152,7 +152,7 @@ while True:
                             print("Es werden noch 2 Gebäude ausgebaut")
                     except Exception as e:
                         print("Fehler beim Gebäudeausbau!\n")
-                        print(e)
+                        #print(e)
                     Util.reset(driver)
 
 

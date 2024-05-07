@@ -86,18 +86,17 @@ class Construction:
         actions.send_keys(Keys.PAGE_DOWN).perform()
 
         #Cycle through Build Order List
-        for j in range(conAmount):
-            if buildSlots < 1:
-                return
-            
-            buildingRange = range(len(sortedBuildingArray))
-            for i in buildingRange:
-                targetBuilding = sortedBuildingArray.pop(i)
-                buildButton = buildingContainer.find_element(By.XPATH, f'.//*[text()="{targetBuilding}"]/ancestor::node()[3]//button')
-                buildButton.click()
-                started = Construction.checkForActiveConstruction(driver, waitAmount=5)
-                if started < buildSlots:
-                    print(f"Gebäudeausbau gestartet für {targetBuilding}")
-                    buildSlots -= 1
-                    time.sleep(2)
-                    break
+        if buildSlots < 1:
+            return
+        
+        buildingRange = range(len(sortedBuildingArray))
+        for i in buildingRange:
+            targetBuilding = sortedBuildingArray.pop(i)
+            buildButton = buildingContainer.find_element(By.XPATH, f'.//*[text()="{targetBuilding}"]/ancestor::node()[3]//button')
+            buildButton.click()
+            started = Construction.checkForActiveConstruction(driver, waitAmount=5)
+            if started < buildSlots:
+                print(f"Gebäudeausbau gestartet für {targetBuilding}")
+                buildSlots -= 1
+                time.sleep(1)
+                break

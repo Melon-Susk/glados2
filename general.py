@@ -39,7 +39,7 @@ class General:
         print("Weltauswahl geladen...")
         time.sleep(float(generalWaitTime))
         #Click on latest played World
-        driver.find_element(By.XPATH, '//*[text()="Germanien X (DE) (empfohlen)"]').click()
+        driver.find_element(By.XPATH, '//*[text()="Germanien X (DE)"]').click()
         #Wait for World to load
         WebDriverWait(driver, 120).until(EC.presence_of_element_located((By.XPATH, '//*[text()="Profil"]')))
         time.sleep(int(loginWaitTime))

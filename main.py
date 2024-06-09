@@ -17,10 +17,18 @@ import os
 
 #Global Variables
 MAINACCOUNT = "unvish112+glados@gmail.com"
-EMAILS = []
+EMAILS = [
+    "unvish112+glados@gmail.com",
+    "pauljay1245+schradin2@outlook.de",
+    "pauljay1245+schradin3@outlook.de",
+    "pauljay1245+schradin4@outlook.de",
+    "pauljay1245+schradin5@outlook.de",
+    "pauljay1245+schradin6@outlook.de",
+    "pauljay1245+schradin7@outlook.de"
+]
 PASSWORD = input("Passwort:")
-EMAILAMOUNT = input("Accountanzahl:")
-FILLERACCS = input("Füller-Accountanzahl:")
+#EMAILAMOUNT = input("Accountanzahl:")
+#FILLERACCS = input("Füller-Accountanzahl:")
 LOGINTIME = input("Login Wartezeit:")
 GENERALWAITTIME = input("Allgemeine Wartezeit:")
 CASTLENAMES = Util.loadJsonToDict('castlenames.json')
@@ -31,14 +39,17 @@ castlesSilver = {}
 sleep = False
 firstCycle = True
 
+"""
 EMAILS.append(MAINACCOUNT)
 
 for i in range(1, int(EMAILAMOUNT) + 1):
     EMAILS.append(f"pauljay1245+schradin{i}@outlook.de")
 
+
 if int(FILLERACCS) > 0:
     for i in range((EMAILAMOUNT + 1), int(FILLERACCS) + 1):
         EMAILS.append(f"pauljay1245+schradin{i}@outlook.de")
+"""
 
 print(EMAILS)
 print("\n")
